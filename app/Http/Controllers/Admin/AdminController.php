@@ -164,13 +164,113 @@ class AdminController extends Controller
         }
         elseif ($slog=='bank') {
             if($request->isMethod('post')){
+                $data = $request->all();
+                $rules = [
+                'acount_holder_name'=>'required|regex:/^[\pL\s\-]+$/u',
+                'bank_name'=>'required|regex:/^[\pL\s\-]+$/u',
+                'account_number'=> 'required|numeric',
+                'bank_ifsc_code'=> 'required|numeric',
+                ];
+                $this->validate($request,$rules);
 
+                // Update Vendor Bank Details
+
+                VendersBankDetail::where('id',Auth::guard('admin')->user()->vendor_id)->update(['acount_holder_name'=>$data['acount_holder_name'],'bank_name'=>$data['bank_name'],'account_number'=>$data['account_number'],'bank_ifsc_code'=>$data['bank_ifsc_code']]);
+
+                return redirect()->back()->with('success','Vendor Bank Details has been updated successfully');
             }
             $vendorDetails = VendersBankDetail::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
         }
         elseif ($slog=='business') {
             if($request->isMethod('post')){
+                $data = $request->all();
+                $rules = [
+                'shop_name'=>'required|regex:/^[\pL\s\-]+$/u',
+                'shop_city'=>'required|regex:/^[\pL\s\-]+$/u',
+                'shop_state'=>'required|regex:/^[\pL\s\-]+$/u',
+                'shop_country'=>'required|regex:/^[\pL\s\-]+$/u',
+                'shop_email'=>'required|email',
+                'shop_pincode'=> 'required|numeric',
+                'shop_mobile'=> 'required|numeric',
+                ];
 
+                $this->validate($request,$rules);
+
+                //Address Proof
+                if($request->hasFile('address_proof_image')){
+                    $image_temp = $request->file('address_proof_image');
+                    if($image_temp->isValid()){
+                        //Get Image Extension
+                        $extension = $image_temp->getClientOriginalExtension();
+                        //Generate New Image Name
+                        $address_proof_image = rand(111,99999).'.'.$extension;
+                        $imagePath = 'admin/images/vendor_address_proof_pic/'.$address_proof_image;
+                        Image::make($image_temp)->save($imagePath);
+                    }
+                    
+                }elseif (!empty($data['current_address_proof'])) {
+                    $address_proof_image = $data['current_address_proof'];
+                }
+                else{
+                    $address_proof_image = "";
+                }
+                //Shop Logo
+                if($request->hasFile('shop_logo')){
+                    $image_temp = $request->file('shop_logo');
+                    if($image_temp->isValid()){
+                        //Get Image Extension
+                        $extension = $image_temp->getClientOriginalExtension();
+                        //Generate New Image Name
+                        $vendor_shop_logo = rand(111,99999).'.'.$extension;
+                        $imagePath = 'admin/images/vendor_shop_logo/'.$vendor_shop_logo;
+                        Image::make($image_temp)->save($imagePath);
+                    }
+                    
+                }elseif (!empty($data['current_shop_logo'])) {
+                    $vendor_shop_logo = $data['current_shop_logo'];
+                }
+                else{
+                    $vendor_shop_logo = "";
+                }
+                // //Address Proof
+                // if($request->hasFile('address_proof_image')){
+                //     $image_temp = $request->file('address_proof_image');
+                //     if($image_temp->isValid()){
+                //         //Get Image Extension
+                //         $extension = $image_temp->getClientOriginalExtension();
+                //         //Generate New Image Name
+                //         $address_proof_image = rand(111,99999).'.'.$extension;
+                //         $imagePath = 'admin/images/vendor_address_proof_pic/'.$address_proof_image;
+                //         Image::make($image_temp)->save($imagePath);
+                //     }
+                    
+                // }elseif (!empty($data['current_address_proof'])) {
+                //     $address_proof_image = $data['current_address_proof'];
+                // }
+                // else{
+                //     $address_proof_image = "";
+                // }
+                // //Address Proof
+                // if($request->hasFile('address_proof_image')){
+                //     $image_temp = $request->file('address_proof_image');
+                //     if($image_temp->isValid()){
+                //         //Get Image Extension
+                //         $extension = $image_temp->getClientOriginalExtension();
+                //         //Generate New Image Name
+                //         $address_proof_image = rand(111,99999).'.'.$extension;
+                //         $imagePath = 'admin/images/vendor_address_proof_pic/'.$address_proof_image;
+                //         Image::make($image_temp)->save($imagePath);
+                //     }
+                    
+                // }elseif (!empty($data['current_address_proof'])) {
+                //     $address_proof_image = $data['current_address_proof'];
+                // }
+                // else{
+                //     $address_proof_image = "";
+                // }
+                // Update Vendor Bank Details
+
+                VendersBusinessDetail::where('id',Auth::guard('admin')->user()->vendor_id)->update(['shop_name'=>$data['shop_name'],'shop_address'=>$data['shop_address'],'shop_city'=>$data['shop_city'],'shop_state'=>$data['shop_state'],'shop_country'=>$data['shop_country'],'shop_pincode'=>$data['shop_pincode'],'shop_mobile'=>$data['shop_mobile'],'shop_website'=>$data['shop_website'],'shop_email'=>$data['shop_email'],'shop_logo'=>$vendor_shop_logo]);
             }
             $vendorDetails = VendersBusinessDetail::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
         }

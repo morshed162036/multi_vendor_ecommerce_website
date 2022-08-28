@@ -23,11 +23,13 @@ return new class extends Migration
             $table->string('shop_country');
             $table->string('shop_pincode');
             $table->string('shop_mobile');
-            $table->string('shop_website');
+            $table->string('shop_website')->nullable();
+            $table->string('shop_logo')->nullable();
             $table->string('shop_email');
             $table->string('address_proof');
             $table->string('address_proof_image');
             $table->string('business_license_number');
+            $table->string('license_certificate');
             $table->string('tin_number');
             $table->string('tin_certificate');
             $table->timestamps();
