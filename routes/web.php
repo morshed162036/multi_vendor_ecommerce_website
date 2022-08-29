@@ -39,11 +39,20 @@ Route::prefix('/admin')->group(function(){
         Route::match(['get','post'],'update-vendor-details/{slug}',[AdminController::class,'updateVendorDetails'])->name('admin.update-vendor-details');
 
 
-        // Admin setting Routes
-        Route::match(['get','post'],'update-admin-password',[AdminController::class,'updatePassword'])->name('admin.update-password');
-        Route::post('check-current-password',[AdminController::class,'checkCurrentPassword'])->name('admin.check-current-password');
+        // SuperAdmin & Admin
 
-        Route::match(['get','post'],'update-admin-details',[AdminController::class,'updateDetails'])->name('admin.update-details');
+            // setting Routes
+            Route::match(['get','post'],'update-admin-password',[AdminController::class,'updatePassword'])->name('admin.update-password');
+            Route::post('check-current-password',[AdminController::class,'checkCurrentPassword'])->name('admin.check-current-password');
+            Route::match(['get','post'],'update-admin-details',[AdminController::class,'updateDetails'])->name('admin.update-details');
+
+            // Admin Management route
+            Route::get('admins/{type?}',[AdminController::class,'adminManagement']);
+
+            //Vendor view details
+            Route::get('admins/view-vendor-details/{id}',[AdminController::class,'adminViewVendorDetails']);
+
+        
     });
     
 });

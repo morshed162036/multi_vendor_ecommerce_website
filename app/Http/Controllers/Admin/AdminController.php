@@ -37,10 +37,7 @@ class AdminController extends Controller
 
         return view('admin.login');
     }
-    public function logout(){
-        Auth::guard('admin')->logout();
-        return redirect('admin/login');
-    }
+    
     
     public function updatePassword(Request $request){
         
@@ -275,6 +272,32 @@ class AdminController extends Controller
             $vendorDetails = VendersBusinessDetail::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
         }
         return view("admin.settings.update-vendor-details")->with(compact('slog','vendorDetails'));
+    }
+    
+    public function adminManagement($type = null){
+        $admins = admin::query();
+        if(!empty($type)){
+            $admins = $admins->where('type',$type);
+            $title = ucfirst($type)."s";
+        }
+        else{
+            $title = "All Admin/Sub Admin/Vendor";
+        }
+        $admindata = $admins->get()->toArray();
+        //dd($admindata);
+        return view('admin.admins.adminmanagement')->with(compact('admindata','title'));
+    }
+       
+    public function adminViewVendorDetails($id){
+        $vendorDetails = admin::with('vendorPersonal','vendorBank','vendorBusiness')->where('id',$id)->first();
+        $vendorDetails = json_decode(json_encode($vendorDetails),true);
+        //dd($vendorDetails);
+        return view('admin.admins.view-vendor-details')->with(compact('vendorDetails'));
+    }
+
+    public function logout(){
+        Auth::guard('admin')->logout();
+        return redirect('admin/login');
     }
 
 }
