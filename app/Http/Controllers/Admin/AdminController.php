@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Auth;
 use Hash;
 use Image;
+use Illuminate\Support\Facades\Session;
+
 use App\Models\admin;
 use App\Models\vendor;
 use App\Models\VendersBusinessDetail;
@@ -15,6 +17,7 @@ use App\Models\VendersBankDetail;
 class AdminController extends Controller
 {
     public function dashboard(){
+        Session::put('page','dashboard');
         return view('admin.dashboard');
     }
     public function login(Request $request){
@@ -41,7 +44,7 @@ class AdminController extends Controller
     
     public function updatePassword(Request $request){
         
-        
+        Session::put('page','update-password');
         if($request -> isMethod('post')){
             $data = $request->all();
             $hashedValue = Auth::guard('admin')->user()->password;
@@ -79,6 +82,7 @@ class AdminController extends Controller
     }
 
     public function updateDetails(Request $request){
+        Session::put('page','update-details');
         if($request->isMethod('post')){
             
             $data = $request->all();
@@ -155,7 +159,7 @@ class AdminController extends Controller
 
                 return redirect()->back()->with('success','Vendor Personal Details has been updated successfully');
             }
-
+            Session::put('page','update-personal-details');
             $vendorDetails = vendor::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
 
         }
@@ -177,6 +181,7 @@ class AdminController extends Controller
                 return redirect()->back()->with('success','Vendor Bank Details has been updated successfully');
             }
             $vendorDetails = VendersBankDetail::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
+            Session::put('page','update-bank-details');
         }
         elseif ($slog=='business') {
             if($request->isMethod('post')){
@@ -270,6 +275,7 @@ class AdminController extends Controller
                 VendersBusinessDetail::where('id',Auth::guard('admin')->user()->vendor_id)->update(['shop_name'=>$data['shop_name'],'shop_address'=>$data['shop_address'],'shop_city'=>$data['shop_city'],'shop_state'=>$data['shop_state'],'shop_country'=>$data['shop_country'],'shop_pincode'=>$data['shop_pincode'],'shop_mobile'=>$data['shop_mobile'],'shop_website'=>$data['shop_website'],'shop_email'=>$data['shop_email'],'shop_logo'=>$vendor_shop_logo]);
             }
             $vendorDetails = VendersBusinessDetail::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();
+            Session::put('page','update-business-details');
         }
         return view("admin.settings.update-vendor-details")->with(compact('slog','vendorDetails'));
     }
@@ -279,9 +285,12 @@ class AdminController extends Controller
         if(!empty($type)){
             $admins = $admins->where('type',$type);
             $title = ucfirst($type)."s";
+            Session::put('page','view-'.strtolower($title));
+            // dd(Session::get('page'));
         }
         else{
             $title = "All Admin/Sub Admin/Vendor";
+            Session::put('page','view-all');
         }
         $admindata = $admins->get()->toArray();
         //dd($admindata);
@@ -293,6 +302,21 @@ class AdminController extends Controller
         $vendorDetails = json_decode(json_encode($vendorDetails),true);
         //dd($vendorDetails);
         return view('admin.admins.view-vendor-details')->with(compact('vendorDetails'));
+    }
+
+    public function updateAdminStatus(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data);die;
+            if ($data['status']== 'Active') {
+                $status = 0;
+            }
+            else{
+                $status = 1;
+            }
+            admin::where('id',$data['admin_id'])->update(['status'=>$status]);
+            return response()->json(['status'=>$status,'admin_id'=> $data['admin_id']]);
+        }
     }
 
     public function logout(){

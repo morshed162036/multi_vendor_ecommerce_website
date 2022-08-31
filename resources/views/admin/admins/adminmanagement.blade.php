@@ -73,11 +73,16 @@
                           </td>
                           <td>
                             @if ($item['status']=='1')
-                                <label class="badge badge-success">Active</label>
+                            <a class="updateAdminStatus" id="admin-{{ $item['id'] }}"
+                            admin_id = "{{ $item['id'] }}"
+                            href="javascript:void(0)">
+                                <label class="badge badge-success" status="Active">Active</label></a>
                             @else
-                                <label class="badge badge-danger">Inactive</label>                                
+                            <a class="updateAdminStatus" id="admin-{{ $item['id'] }}"
+                            admin_id = "{{ $item['id'] }}"
+                             href="javascript:void(0)">
+                                <label class="badge badge-danger"status="Inactive">Inactive</label></a>                                
                             @endif
-                            {{-- {{ $item['status'] }} --}}
                           </td>
                           <td>
                             @if ($item['type']=='vendor')
@@ -98,3 +103,8 @@
 </div>
     
 @endsection
+<style>
+  a label{
+    cursor: pointer;
+  }
+</style> 

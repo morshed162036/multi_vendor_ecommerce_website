@@ -49,6 +49,9 @@ Route::prefix('/admin')->group(function(){
             // Admin Management route
             Route::get('admins/{type?}',[AdminController::class,'adminManagement']);
 
+            // Update Admin Status 
+            Route::post('update-admin-status',[AdminController::class,'updateAdminStatus']);
+
             //Vendor view details
             Route::get('admins/view-vendor-details/{id}',[AdminController::class,'adminViewVendorDetails']);
 
