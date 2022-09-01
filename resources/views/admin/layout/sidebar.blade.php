@@ -118,14 +118,41 @@
                         @endif
                         class="nav-link" href="{{ url('admin/admins') }}">All</a>
                     </li>
-                    {{-- <li class="nav-item"> <a
-                        @if (Session::get('page')=='view-admins')
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-catalogue" aria-expanded="false" aria-controls="ui-catalogue">
+            <i class="icon-layout menu-icon"></i>
+            <span class="menu-title">Catalogue Management</span>
+            <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-catalogue">
+                <ul class="nav flex-column sub-menu" style="background: #fff !important; border:1px solid #4b49ac">
+                    <li class="nav-item"> <a 
+                        @if (Session::get('page')=='sections')
                             style="background: #4b49ac !important; color:#fff !important"
                          @else
                             style="background: #fff !important; color:#4b49ac"   
                         @endif
-                        class="nav-link" href="{{ url('admin/admins/admin') }}">Admin</a>
-                    </li> --}}
+                        class="nav-link" href="{{ url('admin/sections') }}">Section</a>
+                    </li>
+                    <li class="nav-item"> <a 
+                        @if (Session::get('page')=='categories')
+                            style="background: #4b49ac !important; color:#fff !important"
+                         @else
+                            style="background: #fff !important; color:#4b49ac"   
+                        @endif
+                        class="nav-link" href="{{ url('admin/categories') }}">Categories</a>
+                    </li>
+                    <li class="nav-item"> <a 
+                        @if (Session::get('page')=='products')
+                            style="background: #4b49ac !important; color:#fff !important"
+                         @else
+                            style="background: #fff !important; color:#4b49ac"   
+                        @endif
+                        class="nav-link" href="{{ url('admin/products') }}">Products</a>
+                    </li>
                 </ul>
             </div>
         </li>

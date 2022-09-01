@@ -68,3 +68,5 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 1. Image: composer require intervention/image
 
 2. for gd install in php: php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravelRecent"
+
+3. Delete allert, sweet allert2: npm install sweetalert2

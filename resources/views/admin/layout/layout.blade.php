@@ -22,6 +22,10 @@
   <link rel="stylesheet" href="{{ asset('admin/css/vertical-layout-light/style.css')}}">
   <!-- endinject -->
   <link rel="shortcut icon" href="{{ asset('admin/images/favicon.png')}}" />
+  {{-- DataTable --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 <body>
   <div class="container-scroller">
@@ -239,6 +243,8 @@
   {{-- Custom Admin Js --}}
   <script src="{{ asset('admin/js/custom.js')}}"></script>
   {{-- End Custom Admin Js --}}
+  {{-- Sweet alert2 --}}
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

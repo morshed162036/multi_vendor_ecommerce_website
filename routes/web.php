@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,17 @@ Route::prefix('/admin')->group(function(){
 
             //Vendor view details
             Route::get('admins/view-vendor-details/{id}',[AdminController::class,'adminViewVendorDetails']);
+
+            //Sections
+
+            Route::get('sections',[SectionController::class,'sections'])->name('admin.view-section');
+            Route::post('update-section-status',[SectionController::class,'updateSectionStatus']);
+
+            //section delete
+            Route::get('section-delete/{id}',[SectionController::class,'deleteSection'])->name('deleteSection');
+
+            //section Add & Update
+            Route::match(['get', 'post'], 'section-add-edit/{id?}',[SectionController::class,'add_edit_section']);
 
         
     });
