@@ -130,7 +130,7 @@
             <div class="collapse" id="ui-catalogue">
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; border:1px solid #4b49ac">
                     <li class="nav-item"> <a 
-                        @if (Session::get('page')=='sections')
+                        @if (Session::get('page')=='section')
                             style="background: #4b49ac !important; color:#fff !important"
                          @else
                             style="background: #fff !important; color:#4b49ac"   

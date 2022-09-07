@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,18 @@ Route::prefix('/admin')->group(function(){
 
             //section Add & Update
             Route::match(['get', 'post'], 'section-add-edit/{id?}',[SectionController::class,'add_edit_section']);
+
+
+            // Categories
+
+            Route::get('categories',[CategoryController::class,'categories'])->name('admin.view-categories');
+            Route::post('update-category-status',[CategoryController::class,'updateCategoryStatus']);
+
+            //categorie delete
+            Route::get('category-delete/{id}',[CategoryController::class,'deleteCategory'])->name('deleteCategory');
+
+            //categorie Add & Update
+            Route::match(['get', 'post'], 'category-add-edit/{id?}',[CategoryController::class,'add_edit_category']);
 
         
     });

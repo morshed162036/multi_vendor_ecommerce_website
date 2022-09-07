@@ -2,6 +2,7 @@ $(document).ready(function () {
     //$(".nav-item").removeClass("active");
     //$(".nav-link").removeClass("active");
     $("#section_table").DataTable();
+    $("#category_table").DataTable();
 
     //check admin password is correct or not
     $("#current_password").keyup(function () {
@@ -82,6 +83,35 @@ $(document).ready(function () {
                     );
                 } else if (resp["status"] == 1) {
                     $("#section-" + section_id).html(
+                        "<label class='badge badge-success' status='Active'>Active</label>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+    //Update Category Status
+    $(document).on("click", ".updateCategoryStatus", function () {
+        var status = $(this).children("label").attr("status");
+        var category_id = $(this).attr("category_id");
+
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-category-status",
+            data: { status: status, category_id: category_id },
+            success: function (resp) {
+                //alert(resp);
+                if (resp["status"] == 0) {
+                    $("#category-" + category_id).html(
+                        "<label class='badge badge-danger' status='Inactive'>Inactive</label>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#category-" + category_id).html(
                         "<label class='badge badge-success' status='Active'>Active</label>"
                     );
                 }
