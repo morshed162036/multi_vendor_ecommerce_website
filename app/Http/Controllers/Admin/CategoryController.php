@@ -33,6 +33,12 @@ class CategoryController extends Controller
     }
 
     public function deleteCategory($id){
+        $category_image = Category::select('category_image')->where('id',$id);
+        $category_image_path = 'admin/images/categories/';
+
+        if(file_exists($category_image_path.$category_image)){
+            unlink($category_image_path.$category_image);
+        }
         Category::where('id',$id)->delete();
         $message  = "Category Delete Successfully Done";
         return redirect()->back()->with("success",$message);
@@ -43,11 +49,14 @@ class CategoryController extends Controller
         if($id==''){
             $title = "Add Category";
             $category = new Category();
+            $getCategories = array();
             $message = "Category Added Successfully";
         }
         else{
             $title = "Edit Category";
             $category = Category::findorFail($id);
+            $getCategories = Category::with('subcategories')->where(['parent_id'=>0,'section_id'=>$category['section_id']])->get()->toArray();
+            //dd($getCategories);
             $message = "Category Updated Successfully";
         }
         if($request->isMethod('post')){
@@ -70,6 +79,9 @@ class CategoryController extends Controller
                     $imageName = rand(111,99999).'.'.$extension;
                     $imagePath = 'admin/images/categories/'.$imageName;
                     Image::make($image_temp)->save($imagePath);
+                    if(!empty($data['current_category_image'])){
+                        unlink('admin/images/categories/'.$data['current_category_image']);
+                    }
                 }
                 
             }elseif (!empty($data['current_category_image'])) {
@@ -78,12 +90,17 @@ class CategoryController extends Controller
             else{
                 $imageName = "";
             }
-
+                if($request->category_discount == ''){
+                    $category_discount = 0;
+                }
+                else{
+                    $category_discount = $request->category_discount;
+                }
                 $category->category_name = $request->category_name;
                 $category->section_id = $request->section_id;
                 $category->parent_id = $request->parent_id;
                 $category->category_image = $imageName;
-                $category->category_discount = $request->category_discount;
+                $category->category_discount = $category_discount;
                 $category->description = $request->description;
                 $category->url = $request->url;
                 $category->meta_title = $request->meta_title;
@@ -95,8 +112,18 @@ class CategoryController extends Controller
             return redirect('admin/categories')->with('success',$message);
         }
         $sections = Section::get()->all();
-        $categories = Category::get()->all();
+        //$categories = Category::get()->all();
         
-        return view('admin.categories.add-edit-category')->with(compact('title','category','sections','categories'));
+        return view('admin.categories.add-edit-category')->with(compact('title','category','sections','getCategories'));
+    }
+
+    public function appendCategoryLevel(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            $getCategories = Category::with('subcategories')->where(['parent_id'=>0,'section_id'=>$data['section_id']])->get()->toArray();
+            //dd($getCategories);
+
+            return view('admin.categories.append_categories_level')->with(compact('getCategories'));
+        }
     }
 }

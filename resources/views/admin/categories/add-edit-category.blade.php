@@ -68,26 +68,17 @@
                         @endforeach
                     </select>
                 </div>  
-                <div class="form-group">
-                    <label for="parent_id">Select Category Level</label>
-                    <select name="parent_id" id="parent_id"  class="form-control">
-                        <option value="0">Main Category</option>
-                        @foreach ($categories as $item)
-                        <option value="{{ $item['id'] }}" 
-                        @if ($category['parent_id']==$item['id'])
-                        {{ 'selected' }} 
-                        @endif
-                        >{{ $item['category_name'] }}</option>                            
-                        @endforeach
-                    </select>
+                
+                <div id="appendCategoriesLevel">
+                    @include('admin.categories.append_categories_level')
                 </div>  
                 <div class="form-group">
                     <label for="category_image">Category Image</label>
                     <input type="file" class="form-control" name="category_image" id="category_image">
                     @if (!empty($category['category_image']))
                     <img src="{{ asset('admin/images/categories/'.$category['category_image']) }}" alt="category image" width="250" height="250">
-                      {{-- <a href="{{ url('admin/images/categories/'.$category['category_image']) }}"> View Image</a>
-                      <input type="hidden" name="current_category_image" value="{{ $category['category_image'] }}"> --}}
+                      <a href="{{ url('admin/images/categories/'.$category['category_image']) }}"> </a>
+                      <input type="hidden" name="current_category_image" value="{{ $category['category_image'] }}">
                     @endif
                 </div>  
                 <div class="form-group">
@@ -96,7 +87,7 @@
                     @if (!empty($category['category_discount']))
                         value="{{ $category['category_discount'] }}"
                     @endif 
-                    placeholder="Enter Discount Value" name="category_discount" required>
+                    placeholder="Enter Discount Value" name="category_discount" >
                 </div>  
                 <div class="form-group">
                     <label for="description">Description</label>

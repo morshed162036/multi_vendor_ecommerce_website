@@ -158,6 +158,7 @@ class AdminController extends Controller
                 vendor::where('id',Auth::guard('admin')->user()->vendor_id)->update(['name'=>$data['vendor_name'],'mobile'=>$data['vendor_mobile'],'address'=>$data['vendor_address'],'city'=>$data['vendor_city'],'state'=>$data['vendor_state'],'country'=>$data['vendor_country'],'pincode'=>$data['vendor_pincode'],'nid'=>$data['vendor_nid'],'trade_license'=>$data['vendor_trade_license']]);
 
                 return redirect()->back()->with('success','Vendor Personal Details has been updated successfully');
+            
             }
             Session::put('page','update-personal-details');
             $vendorDetails = vendor::where('id',Auth::guard('admin')->user()->vendor_id)->first()->toArray();

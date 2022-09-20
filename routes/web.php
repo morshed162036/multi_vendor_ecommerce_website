@@ -80,6 +80,8 @@ Route::prefix('/admin')->group(function(){
             //categorie Add & Update
             Route::match(['get', 'post'], 'category-add-edit/{id?}',[CategoryController::class,'add_edit_category']);
 
+            Route::get('append-categories-level',[CategoryController::class,'appendCategoryLevel']);
+
         
     });
     
